@@ -1,0 +1,12 @@
+# PyTorch model checkpoints
+*.pth
+*.pth.tar
+
+# Common checkpoint directories
+checkpoints/
+checkpoint/
+models/
+saved_models/
+
+# Optional: ignore training artifacts
+*.ckpt
