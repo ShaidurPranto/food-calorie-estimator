@@ -10,3 +10,6 @@ saved_models/
 
 # Optional: ignore training artifacts
 *.ckpt
+
+*.pt
+*.yaml
