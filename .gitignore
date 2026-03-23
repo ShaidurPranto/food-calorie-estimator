@@ -10,3 +10,6 @@ saved_models/
 
 # Optional: ignore training artifacts
 *.ckpt
+
+testing/classification_module/food_data_english/
+implementation/food_data_english/
