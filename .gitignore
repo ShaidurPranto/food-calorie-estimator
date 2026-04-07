@@ -5,6 +5,7 @@
 # Common checkpoint directories
 checkpoints/
 checkpoint/
+configs/
 models/
 saved_models/
 
