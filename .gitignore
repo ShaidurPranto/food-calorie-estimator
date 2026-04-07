@@ -15,3 +15,6 @@ saved_models/
 *.yaml
 
 *.zip
+testing/classification_module/food_data_english/
+implementation/food_data_english/
+testing/segmentation_module/food_data_english/
