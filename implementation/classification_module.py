@@ -199,3 +199,42 @@ class FoodClassifier:
                 except Exception as e:
                     print(f"Failed to process {img_name}: {e}")
 
+    def classify_and_display_folder(self, folder_path: str):
+        """
+        Classifies and displays all images within the given folder.
+        
+        Args:
+            folder_path (str): Path to the folder containing images.
+        """
+        if not os.path.exists(folder_path):
+            raise FileNotFoundError(f"Folder not found at {folder_path}")
+            
+        import matplotlib.pyplot as plt
+        
+        valid_extensions = ('.png', '.jpg', '.jpeg', '.bmp', '.webp')
+        
+        print(f"\n--- Processing folder: {folder_path} ---")
+        
+        image_files = [f for f in os.listdir(folder_path) if f.lower().endswith(valid_extensions)]
+        image_files = sorted(image_files)
+        
+        if not image_files:
+            print(f"No images found in {folder_path}")
+            return
+            
+        for img_name in image_files:
+            img_path = os.path.join(folder_path, img_name)
+            try:
+                result = self.classify_by_path(img_path)
+                
+                # Display the image with its prediction
+                img = Image.open(img_path)
+                plt.figure(figsize=(6, 6))
+                plt.imshow(img)
+                plt.title(f"File: {img_name}\nClass: {result['class_name']} | Confidence: {result['confidence']:.4f}")
+                plt.axis('off')
+                plt.show()
+            except Exception as e:
+                print(f"Failed to process {img_name}: {e}")
+
+
