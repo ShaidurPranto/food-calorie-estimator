@@ -135,12 +135,67 @@ class FoodClassifier:
 
         # Open image
         try:
-            image = Image.open(image_path).convert('RGB')
+            # image = Image.open(image_path).convert('RGB')
+            image = Image.open(image_path)
+
+            if image.mode in ("RGBA", "P"):
+                image = image.convert("RGBA")
+                # Create a white background to paste transparent pixels over
+                background = Image.new("RGB", image.size, (255, 255, 255)) 
+                background.paste(image, mask=image.split()[3]) # 3 is the alpha channel
+                img = background
+            else:
+                img = image.convert("RGB")
         except Exception as e:
             raise ValueError(f"Failed to open image: {e}")
 
         # Classify using image
-        result = self.classify_by_image(image)
+        result = self.classify_by_image(img)
         result['image_path'] = image_path
 
         return result
+
+    def classify_and_display_subfolders(self, root_folder_path: str):
+        """
+        Classifies and displays all images within subfolders of the given root folder.
+        
+        Args:
+            root_folder_path (str): Path to the root folder containing subfolders with images.
+        """
+        if not os.path.exists(root_folder_path):
+            raise FileNotFoundError(f"Root folder not found at {root_folder_path}")
+            
+        import matplotlib.pyplot as plt
+        
+        valid_extensions = ('.png', '.jpg', '.jpeg', '.bmp', '.webp')
+        
+        subfolders = [f for f in os.listdir(root_folder_path) 
+                      if os.path.isdir(os.path.join(root_folder_path, f))]
+        subfolders = sorted(subfolders)
+        
+        for subfolder in subfolders:
+            subfolder_path = os.path.join(root_folder_path, subfolder)
+            print(f"\n--- Processing subfolder: {subfolder} ---")
+            
+            image_files = [f for f in os.listdir(subfolder_path) if f.lower().endswith(valid_extensions)]
+            image_files = sorted(image_files)
+            
+            if not image_files:
+                print(f"No images found in {subfolder}")
+                continue
+                
+            for img_name in image_files:
+                img_path = os.path.join(subfolder_path, img_name)
+                try:
+                    result = self.classify_by_path(img_path)
+                    
+                    # Display the image with its prediction
+                    img = Image.open(img_path)
+                    plt.figure(figsize=(6, 6))
+                    plt.imshow(img)
+                    plt.title(f"File: {img_name}\nClass: {result['class_name']} | Confidence: {result['confidence']:.4f}")
+                    plt.axis('off')
+                    plt.show()
+                except Exception as e:
+                    print(f"Failed to process {img_name}: {e}")
+
