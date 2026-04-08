@@ -5,12 +5,17 @@
 # Common checkpoint directories
 checkpoints/
 checkpoint/
+configs/
 models/
 saved_models/
 
 # Optional: ignore training artifacts
 *.ckpt
 
+*.pt
+*.yaml
+
+*.zip
 testing/classification_module/food_data_english/
 implementation/food_data_english/
 testing/segmentation_module/food_data_english/
