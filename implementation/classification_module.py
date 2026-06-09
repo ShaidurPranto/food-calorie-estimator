@@ -1,4 +1,5 @@
 import os
+import shutil
 import torch
 import torch.nn as nn
 from torchvision import transforms
@@ -236,5 +237,156 @@ class FoodClassifier:
                 plt.show()
             except Exception as e:
                 print(f"Failed to process {img_name}: {e}")
+
+    def classify_and_copy_folder(self, folder_path: str, output_dir: str, threshold: float = 0.0):
+        """
+        Classify all images in a folder and copy confident predictions into label folders.
+
+        Args:
+            folder_path (str): Path to the folder containing images.
+            output_dir (str): Directory where label folders will be created.
+            threshold (float): Minimum confidence required to copy an image.
+
+        Returns:
+            list[str]: Unique label names inferred from images in the folder.
+        """
+        if not os.path.exists(folder_path):
+            raise FileNotFoundError(f"Folder not found at {folder_path}")
+
+        os.makedirs(output_dir, exist_ok=True)
+
+        valid_extensions = ('.png', '.jpg', '.jpeg', '.bmp', '.webp')
+        image_files = [f for f in os.listdir(folder_path) if f.lower().endswith(valid_extensions)]
+        image_files = sorted(image_files)
+
+        created_labels = []
+        seen_labels = set()
+
+        for img_name in image_files:
+            img_path = os.path.join(folder_path, img_name)
+
+            try:
+                result = self.classify_by_path(img_path)
+                if result['confidence'] < threshold:
+                    continue
+
+                label_name = result['class_name']
+                label_dir = os.path.join(output_dir, label_name)
+
+                if label_name not in seen_labels:
+                    created_labels.append(label_name)
+                    seen_labels.add(label_name)
+
+                if not os.path.exists(label_dir):
+                    os.makedirs(label_dir, exist_ok=True)
+
+                destination_path = os.path.join(label_dir, img_name)
+                shutil.copy2(img_path, destination_path)
+
+            except Exception as e:
+                print(f"Failed to process {img_name}: {e}")
+
+        return created_labels
+
+    def _classify_image_with_allowed_labels(self, image, allowed_labels):
+        """
+        Classify an image by selecting the highest-confidence label from an allowed list.
+
+        Args:
+            image (PIL.Image): PIL image to classify.
+            allowed_labels (list[str]): Labels that are eligible for selection.
+
+        Returns:
+            dict | None: Prediction details, or None if none of the allowed labels exist.
+        """
+        if not isinstance(image, Image.Image):
+            raise TypeError("Input must be a PIL Image object")
+
+        allowed_label_set = {str(label).strip() for label in allowed_labels if str(label).strip()}
+        if not allowed_label_set:
+            raise ValueError("allowed_labels must contain at least one non-empty label")
+
+        image_tensor = self.transform(image).unsqueeze(0).to(self.device)
+
+        with torch.no_grad():
+            outputs = self.model(image_tensor)
+            probabilities = torch.softmax(outputs, dim=1)[0]
+
+        eligible_predictions = [
+            (index, label, probabilities[index].item())
+            for index, label in enumerate(self.labels)
+            if label in allowed_label_set
+        ]
+
+        if not eligible_predictions:
+            return None
+
+        class_index, class_name, confidence = max(eligible_predictions, key=lambda item: item[2])
+
+        return {
+            'class_index': class_index,
+            'class_name': class_name,
+            'confidence': confidence
+        }
+
+    def classify_and_copy_folder_with_label_filter(self, folder_path: str, output_dir: str, allowed_labels: list[str], threshold: float = 0.0):
+        """
+        Classify all images in a folder using only the provided labels, then copy confident results.
+
+        Args:
+            folder_path (str): Path to the folder containing images.
+            output_dir (str): Directory where label folders will be created.
+            allowed_labels (list[str]): Labels that are allowed to be considered for each image.
+            threshold (float): Minimum confidence required to copy an image.
+
+        Returns:
+            list[str]: Label names for which new folders were created in the output directory.
+        """
+        if not os.path.exists(folder_path):
+            raise FileNotFoundError(f"Folder not found at {folder_path}")
+
+        os.makedirs(output_dir, exist_ok=True)
+
+        valid_extensions = ('.png', '.jpg', '.jpeg', '.bmp', '.webp')
+        image_files = [f for f in os.listdir(folder_path) if f.lower().endswith(valid_extensions)]
+        image_files = sorted(image_files)
+
+        created_labels = []
+        created_label_set = set()
+
+        for img_name in image_files:
+            img_path = os.path.join(folder_path, img_name)
+
+            try:
+                image = Image.open(img_path)
+
+                if image.mode in ("RGBA", "P"):
+                    image = image.convert("RGBA")
+                    background = Image.new("RGB", image.size, (255, 255, 255))
+                    background.paste(image, mask=image.split()[3])
+                    img = background
+                else:
+                    img = image.convert("RGB")
+
+                result = self._classify_image_with_allowed_labels(img, allowed_labels)
+                if result is None or result['confidence'] < threshold:
+                    continue
+
+                label_name = result['class_name']
+                label_dir = os.path.join(output_dir, label_name)
+
+                if not os.path.exists(label_dir):
+                    os.makedirs(label_dir, exist_ok=True)
+                    if label_name not in created_label_set:
+                        created_labels.append(label_name)
+                        created_label_set.add(label_name)
+
+                destination_path = os.path.join(label_dir, img_name)
+                shutil.copy2(img_path, destination_path)
+
+            except Exception as e:
+                print(f"Failed to process {img_name}: {e}")
+
+        return created_labels
 
 
