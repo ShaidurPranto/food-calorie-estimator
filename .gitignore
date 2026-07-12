@@ -19,3 +19,19 @@ saved_models/
 testing/classification_module/food_data_english/
 implementation/food_data_english/
 testing/segmentation_module/food_data_english/
+
+# Ignore all image formats
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.bmp
+*.tiff
+*.webp
+*.svg
+*.ico
+
+# Ignore common image folders (optional but recommended)
+**/images/
+**/image/
+**/img/
