@@ -7,7 +7,7 @@ def main():
     Main function to demonstrate food classification on a sample image.
     """
     # Configuration
-    IMAGE_PATH = "random/test2.jpg"
+    IMAGE_PATH = "random/orange3.jpg"
 
     # Initialize classifier
     print("Initializing Food Classifier...")

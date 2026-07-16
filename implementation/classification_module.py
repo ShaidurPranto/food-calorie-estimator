@@ -18,7 +18,7 @@ class FoodClassifier:
         """
         self.model_path = "saved_models/model_1_vit_segment_aware.pth"
         self.labels_path = "meta/labels.txt"
-        self.num_classes = 19
+        self.num_classes = 7
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
 
         # Load labels
@@ -70,7 +70,8 @@ class FoodClassifier:
 
         # Create model architecture
         model = timm.create_model(
-            "vit_small_patch16_224",
+            "vit_base_patch16_224_in21k",
+            # "vit_small_patch16_224",
             pretrained=False,
             num_classes=self.num_classes
         )

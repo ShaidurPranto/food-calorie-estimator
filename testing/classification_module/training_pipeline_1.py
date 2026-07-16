@@ -94,8 +94,8 @@ print(f"Classes: {full_dataset.classes}")
 # 4. MODEL (ViT ImageNet-21k)
 # -----------------------------
 model = timm.create_model(
-    # "vit_base_patch16_224_in21k",
-    "vit_small_patch16_224",
+    "vit_base_patch16_224_in21k",
+    # "vit_small_patch16_224",
     pretrained=True,
     num_classes=NUM_CLASSES
 )
