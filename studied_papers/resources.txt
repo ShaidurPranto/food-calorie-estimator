@@ -1,0 +1,67 @@
+1. Foundational Concept Paper (First Introduction of Thumb Calibration)
+Title: An Image Processing Approach for Calorie Intake Measurement
+
+Authors: Parisa Pouladzadeh, Rana Almaghrabi, and Shervin Shirmohammadi
+
+Venue: 2012 IEEE International Symposium on Medical Measurements and Applications (MeMeA), pp. 1–4, 2012.
+
+DOI: 10.1109/MeMeA.2012.6226662
+
+
+2. Comprehensive Journal Paper (Two-View Volume & Multi-Food Measurement)
+Title: Measuring Calorie and Nutrition From Food Image
+
+Authors: Parisa Pouladzadeh, Shervin Shirmohammadi, and Rana Almaghrabi
+
+Venue: IEEE Transactions on Instrumentation and Measurement, Vol. 63, No. 8, pp. 1947–1956, 2014.
+
+DOI: 10.1109/TIM.2014.2303533
+
+
+3. Deep Learning Extension
+Title: Food Calorie Measurement Using Deep Learning Neural Network
+
+Authors: Parisa Pouladzadeh, Pallavi Kuhad, Sri Vijay Bharat Peddi, Abdulsalam Yassine, and Shervin Shirmohammadi
+
+Venue: 2016 IEEE International Instrumentation and Measurement Technology Conference (I2MTC), pp. 1–6, 2016.
+
+DOI: 10.1109/I2MTC.2016.7520547
+
+
+4. Benchmark Dataset Paper (Images with Thumb Reference)
+Title: FooDD: Food Detection Dataset for Calorie Measurement Using Food Images
+
+Authors: Parisa Pouladzadeh, Abdulsalam Yassine, and Shervin Shirmohammadi
+
+Venue: New Trends in Image Analysis and Processing – ICIAP 2015 Workshops (Lecture Notes in Computer Science, Vol. 9281), Springer, pp. 441–448, 2015.
+
+DOI: 10.1007/978-3-319-23222-5_54
+
+
+5. Related Multi-View Calibration Comparison
+Title: Computer Vision-Based Food Calorie Estimation: Dataset, Simplified Imaging System, and Efficient Method
+
+Authors: Yanchao Liang and Jianmin Li
+
+Venue: IEEE Transactions on Instrumentation and Measurement, Vol. 69, No. 11, pp. 9152–9164, 2020.
+
+DOI: 10.1109/TIM.2020.2985172
+
+
+
+
+
+------------------------------------------------------------------------------------------------------
+
+1. FooDD (Food Detection Dataset)Introduced by: Parisa Pouladzadeh, Abdulsalam Yassine, and Shervin Shirmohammadi (University of Ottawa).Setup & Details:Contains approximately 3,000 food images spanning single items and mixed food plates captured under varying lighting, angles, and phone cameras.  Crucially, every plate image includes a human thumb positioned beside the plate as the physical calibration marker.
+Access Links:Kaggle Mirror: FooDD IEEE Datasets on Kaggle (Readily downloadable structured archive).Dataset Paper & Release Info: ResearchGate: FooDD Publication.
+https://www.kaggle.com/datasets/darsh22blc1378/foodd-ieee-datasets
+
+
+2. ECUSTFD (ECUST Food Dataset)Introduced by: Yanchao Liang and Jianmin Li (East China University of Science and Technology).Setup & Details:Specifically designed for volume-based food portion estimation using two views: Top View (~0°) and Side View (~90°).  Contains 2,978 multi-view images covering 19 food types on plates.  Includes ground-truth volume (measured via water displacement), electronic scale weight/mass records, food density values (density.xls), and bounding box annotations.  Uses a standardized One-Yuan coin (diameter: 25.0 mm) as the calibration reference.  
+https://github.com/Liang-yc/ECUSTFD-resized-/blob/master/JPEGImages/apple001S(1).JPG
+
+3. Food-101 (Used for Classification Baselines)
+Introduced by: Lukas Bossard, Matthieu Guillaumin, and Luc Van Gool (ETH Zurich).
+Setup & Details: Frequently paired with the datasets above to pre-train deep neural network backbones (CNNs/ViTs) for multi-class food recognition before volume modeling.
+https://www.kaggle.com/datasets/dansbecker/food-101
