@@ -49,7 +49,7 @@ os.makedirs("saved_models", exist_ok=True)
 # ============================================================
 
 train_transform = transforms.Compose([
-    transforms.RandomResizedCrop(224, scale=(0.5, 1.0)),
+    transforms.RandomResizedCrop(224, scale=(0.75, 1.0)),
     transforms.RandomHorizontalFlip(),
 
     transforms.ToTensor(),
